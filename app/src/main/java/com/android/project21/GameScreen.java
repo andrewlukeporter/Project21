@@ -1,5 +1,7 @@
 package com.android.project21;
 
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -9,8 +11,10 @@ import android.content.Context;
  * Created by andrewporter on 19/03/2016.
  */
 public class GameScreen extends SurfaceView implements SurfaceHolder.Callback {
-
+    private Background bg;
     private MainThread mainThread;
+    public static final int WIDTH = 800;
+    public static final int HEIGHT = 1280;
 
     public GameScreen(Context context) {
         super(context);
@@ -44,6 +48,7 @@ public class GameScreen extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
+        bg = new Background(BitmapFactory.decodeResource(getResources(), R.drawable.bg));
         //start game loop
         mainThread.setRunning(true);
         mainThread.start();
@@ -56,5 +61,18 @@ public class GameScreen extends SurfaceView implements SurfaceHolder.Callback {
 
     public void update() {
 
+    }
+
+    @Override
+    public void draw(Canvas canvas) {
+        final float scaleX = getWidth() / (WIDTH * 1.f);
+        final float scaleY = getHeight() / (HEIGHT * 1.f);
+
+        if (canvas != null) {
+            final int savedState = canvas.save();
+            canvas.scale(scaleX, scaleY);
+            bg.draw(canvas);
+            canvas.restoreToCount(savedState);
+        }
     }
 }
